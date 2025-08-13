@@ -72,8 +72,34 @@ def extract_text_from_file(file):
         return "Unsupported file format"
 
 def analyze_resume_with_ai(resume_text):
-    """Analyze resume using OpenAI API"""
+    """Comprehensive resume analysis with mandatory features"""
     try:
+        system_prompt = """You are an expert resume analyst and career coach. You must provide a comprehensive analysis covering these THREE MANDATORY sections:
+
+## 1. AI RESUME IMPROVEMENT
+Provide clear, actionable suggestions for:
+- Formatting and layout improvements
+- Grammar and language corrections
+- Keyword optimization for the industry
+- Overall presentation enhancements
+- Content structure improvements
+
+## 2. ATS SCORE SIMULATION
+Analyze ATS (Applicant Tracking System) compatibility:
+- Provide an ATS compatibility score (0-100)
+- List specific ATS optimization issues found
+- Suggest keywords to add for better ATS performance
+- Comment on formatting compatibility with ATS systems
+
+## 3. CAREER COACHING INSIGHTS
+Provide strategic career advice:
+- Identify career strengths and growth areas
+- Suggest skill gaps to address
+- Recommend experience highlights to emphasize
+- Provide industry-specific guidance
+
+Format your response with clear headers using ### for each section. Be specific, actionable, and professional."""
+
         if client:
             # Use new client
             response = client.chat.completions.create(
@@ -81,14 +107,14 @@ def analyze_resume_with_ai(resume_text):
                 messages=[
                     {
                         "role": "system", 
-                        "content": "You are a professional resume reviewer. Analyze the provided resume and give detailed feedback on strengths, weaknesses, and specific improvement suggestions. Be constructive and actionable."
+                        "content": system_prompt
                     },
                     {
                         "role": "user", 
-                        "content": f"Please analyze this resume and provide detailed feedback:\n\n{resume_text}"
+                        "content": f"Please provide a comprehensive analysis of this resume:\n\n{resume_text}"
                     }
                 ],
-                max_tokens=1500,
+                max_tokens=2000,
                 temperature=0.7
             )
             return response.choices[0].message.content
@@ -99,14 +125,14 @@ def analyze_resume_with_ai(resume_text):
                 messages=[
                     {
                         "role": "system", 
-                        "content": "You are a professional resume reviewer. Analyze the provided resume and give detailed feedback on strengths, weaknesses, and specific improvement suggestions. Be constructive and actionable."
+                        "content": system_prompt
                     },
                     {
                         "role": "user", 
-                        "content": f"Please analyze this resume and provide detailed feedback:\n\n{resume_text}"
+                        "content": f"Please provide a comprehensive analysis of this resume:\n\n{resume_text}"
                     }
                 ],
-                max_tokens=1500,
+                max_tokens=2000,
                 temperature=0.7
             )
             return response.choices[0].message.content
@@ -424,6 +450,135 @@ def index():
                 color: #fff;
             }
             
+            .optional-features {
+                background: linear-gradient(135deg, #f8f9ff 0%, #ffffff 100%);
+                padding: 25px;
+                border-radius: 15px;
+                margin: 25px 0;
+                border-left: 5px solid #28a745;
+                box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            }
+            
+            .optional-features h3 {
+                color: #333;
+                margin-bottom: 20px;
+                font-size: 1.4rem;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+            
+            .feature-buttons {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                gap: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .feature-btn {
+                background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+                color: white;
+                padding: 15px 20px;
+                border: none;
+                border-radius: 10px;
+                cursor: pointer;
+                font-size: 14px;
+                font-weight: 600;
+                transition: all 0.3s ease;
+                box-shadow: 0 4px 15px rgba(40, 167, 69, 0.3);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+            
+            .feature-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 25px rgba(40, 167, 69, 0.4);
+            }
+            
+            .feature-btn:disabled {
+                background: #6c757d;
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+            }
+            
+            .feature-result {
+                background: rgba(255, 255, 255, 0.8);
+                padding: 20px;
+                border-radius: 10px;
+                margin: 15px 0;
+                border-left: 4px solid #28a745;
+            }
+            
+            .feature-result h4 {
+                color: #28a745;
+                margin-bottom: 15px;
+                font-size: 1.2rem;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            
+            .modal {
+                position: fixed;
+                z-index: 1000;
+                left: 0;
+                top: 0;
+                width: 100%;
+                height: 100%;
+                background-color: rgba(0,0,0,0.5);
+                backdrop-filter: blur(5px);
+            }
+            
+            .modal-content {
+                background-color: white;
+                margin: 15% auto;
+                padding: 30px;
+                border-radius: 15px;
+                width: 90%;
+                max-width: 500px;
+                box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+                position: relative;
+            }
+            
+            .modal-content h3 {
+                color: #333;
+                margin-bottom: 20px;
+                font-size: 1.4rem;
+            }
+            
+            .modal-input {
+                width: 100%;
+                padding: 12px 15px;
+                border: 2px solid #e1e5e9;
+                border-radius: 8px;
+                font-size: 14px;
+                margin-bottom: 20px;
+                transition: border-color 0.3s ease;
+            }
+            
+            .modal-input:focus {
+                outline: none;
+                border-color: #667eea;
+            }
+            
+            .close {
+                color: #aaa;
+                float: right;
+                font-size: 28px;
+                font-weight: bold;
+                position: absolute;
+                right: 15px;
+                top: 10px;
+                cursor: pointer;
+            }
+            
+            .close:hover {
+                color: #333;
+            }
+            
             @media (max-width: 768px) {
                 .header h1 {
                     font-size: 2rem;
@@ -445,6 +600,15 @@ def index():
                 
                 .chat-input {
                     border-radius: 10px;
+                }
+                
+                .feature-buttons {
+                    grid-template-columns: 1fr;
+                }
+                
+                .modal-content {
+                    margin: 10% auto;
+                    width: 95%;
                 }
             }
         </style>
@@ -492,18 +656,70 @@ def index():
             </div>
 
             <div class="analysis-result" id="analysisResult">
-                <h3><i class="fas fa-chart-bar"></i> Analysis Results</h3>
+                <h3><i class="fas fa-chart-bar"></i> Comprehensive Resume Analysis</h3>
                 <div id="analysisContent"></div>
             </div>
 
+            <!-- Optional Features Section -->
+            <div class="optional-features" id="optionalFeatures" style="display: none;">
+                <h3><i class="fas fa-plus-circle"></i> Optional Features</h3>
+                <div class="feature-buttons">
+                    <button onclick="getJobSuggestions()" class="feature-btn" id="jobSuggestionsBtn">
+                        <i class="fas fa-briefcase"></i> Job Role Suggestions
+                    </button>
+                    <button onclick="showCoverLetterModal()" class="feature-btn" id="coverLetterBtn">
+                        <i class="fas fa-file-alt"></i> Cover Letter Generator
+                    </button>
+                    <button onclick="showInterviewQuestionsModal()" class="feature-btn" id="interviewBtn">
+                        <i class="fas fa-question-circle"></i> Interview Questions
+                    </button>
+                </div>
+                
+                <!-- Results containers for optional features -->
+                <div id="jobSuggestionsResult" class="feature-result" style="display: none;">
+                    <h4><i class="fas fa-briefcase"></i> Recommended Job Roles</h4>
+                    <div id="jobSuggestionsContent"></div>
+                </div>
+                
+                <div id="coverLetterResult" class="feature-result" style="display: none;">
+                    <h4><i class="fas fa-file-alt"></i> Generated Cover Letter</h4>
+                    <div id="coverLetterContent"></div>
+                </div>
+                
+                <div id="interviewQuestionsResult" class="feature-result" style="display: none;">
+                    <h4><i class="fas fa-question-circle"></i> Interview Questions</h4>
+                    <div id="interviewQuestionsContent"></div>
+                </div>
+            </div>
+
             <div class="chat-container" id="chatContainer">
-                <h3><i class="fas fa-comments"></i> Chat with AI Resume Coach</h3>
+                <h3><i class="fas fa-comments"></i> Interactive AI Coaching Chat</h3>
                 <div class="chat-history" id="chatHistory"></div>
                 <div class="chat-input-container">
                     <input type="text" id="chatInput" class="chat-input" placeholder="Ask questions about your resume..." maxlength="500">
                     <button onclick="sendMessage()" class="chat-send-btn"><i class="fas fa-paper-plane"></i></button>
                 </div>
             </div>
+            </div>
+        </div>
+
+        <!-- Modal for Cover Letter -->
+        <div id="coverLetterModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close" onclick="closeCoverLetterModal()">&times;</span>
+                <h3>Generate Cover Letter</h3>
+                <input type="text" id="jobRoleInput" placeholder="Enter job role (e.g., Software Engineer)" class="modal-input">
+                <button onclick="generateCoverLetter()" class="btn">Generate Cover Letter</button>
+            </div>
+        </div>
+
+        <!-- Modal for Interview Questions -->
+        <div id="interviewModal" class="modal" style="display: none;">
+            <div class="modal-content">
+                <span class="close" onclick="closeInterviewModal()">&times;</span>
+                <h3>Generate Interview Questions</h3>
+                <input type="text" id="interviewJobRoleInput" placeholder="Enter job role (e.g., Data Analyst)" class="modal-input">
+                <button onclick="generateInterviewQuestions()" class="btn">Generate Questions</button>
             </div>
         </div>
 
@@ -548,10 +764,12 @@ def index():
                         document.getElementById('analysisContent').innerHTML = formatAnalysisText(result.analysis);
                         document.getElementById('analysisResult').style.display = 'block';
                         document.getElementById('chatContainer').style.display = 'block';
+                        document.getElementById('optionalFeatures').style.display = 'block';
                         
-                        // Clear previous chat
+                        // Clear previous chat and optional features
                         chatHistory = [];
                         document.getElementById('chatHistory').innerHTML = '';
+                        hideAllFeatureResults();
                     } else {
                         alert('Error: ' + result.error);
                     }
@@ -677,6 +895,144 @@ def index():
             function scrollToBottom() {
                 const chatHistory = document.getElementById('chatHistory');
                 chatHistory.scrollTop = chatHistory.scrollHeight;
+            }
+
+            // Optional Features Functions
+            function hideAllFeatureResults() {
+                document.getElementById('jobSuggestionsResult').style.display = 'none';
+                document.getElementById('coverLetterResult').style.display = 'none';
+                document.getElementById('interviewQuestionsResult').style.display = 'none';
+            }
+
+            async function getJobSuggestions() {
+                if (!sessionId) return;
+                
+                const btn = document.getElementById('jobSuggestionsBtn');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Loading...';
+                
+                try {
+                    const response = await fetch('/job-suggestions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            session_id: sessionId
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        document.getElementById('jobSuggestionsContent').innerHTML = formatAnalysisText(result.suggestions);
+                        document.getElementById('jobSuggestionsResult').style.display = 'block';
+                    } else {
+                        alert('Error: ' + result.error);
+                    }
+                } catch (error) {
+                    alert('Error: ' + error.message);
+                } finally {
+                    btn.disabled = false;
+                    btn.innerHTML = '<i class="fas fa-briefcase"></i> Job Role Suggestions';
+                }
+            }
+
+            function showCoverLetterModal() {
+                document.getElementById('coverLetterModal').style.display = 'block';
+            }
+
+            function closeCoverLetterModal() {
+                document.getElementById('coverLetterModal').style.display = 'none';
+                document.getElementById('jobRoleInput').value = '';
+            }
+
+            async function generateCoverLetter() {
+                const jobRole = document.getElementById('jobRoleInput').value.trim();
+                if (!jobRole || !sessionId) {
+                    alert('Please enter a job role');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/cover-letter', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            session_id: sessionId,
+                            job_role: jobRole
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        document.getElementById('coverLetterContent').innerHTML = formatAnalysisText(result.cover_letter);
+                        document.getElementById('coverLetterResult').style.display = 'block';
+                        closeCoverLetterModal();
+                    } else {
+                        alert('Error: ' + result.error);
+                    }
+                } catch (error) {
+                    alert('Error: ' + error.message);
+                }
+            }
+
+            function showInterviewQuestionsModal() {
+                document.getElementById('interviewModal').style.display = 'block';
+            }
+
+            function closeInterviewModal() {
+                document.getElementById('interviewModal').style.display = 'none';
+                document.getElementById('interviewJobRoleInput').value = '';
+            }
+
+            async function generateInterviewQuestions() {
+                const jobRole = document.getElementById('interviewJobRoleInput').value.trim();
+                if (!jobRole || !sessionId) {
+                    alert('Please enter a job role');
+                    return;
+                }
+                
+                try {
+                    const response = await fetch('/interview-questions', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            session_id: sessionId,
+                            job_role: jobRole
+                        })
+                    });
+                    
+                    const result = await response.json();
+                    
+                    if (result.success) {
+                        document.getElementById('interviewQuestionsContent').innerHTML = formatAnalysisText(result.questions);
+                        document.getElementById('interviewQuestionsResult').style.display = 'block';
+                        closeInterviewModal();
+                    } else {
+                        alert('Error: ' + result.error);
+                    }
+                } catch (error) {
+                    alert('Error: ' + error.message);
+                }
+            }
+
+            // Close modals when clicking outside
+            window.onclick = function(event) {
+                const coverLetterModal = document.getElementById('coverLetterModal');
+                const interviewModal = document.getElementById('interviewModal');
+                
+                if (event.target == coverLetterModal) {
+                    closeCoverLetterModal();
+                }
+                if (event.target == interviewModal) {
+                    closeInterviewModal();
+                }
             }
         </script>
     </body>
@@ -818,6 +1174,145 @@ def chat():
             'ai_reply': ai_reply,
             'updated_chat_history': updated_chat_history
         })
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/job-suggestions', methods=['POST'])
+def get_job_suggestions():
+    """Generate job role suggestions based on resume"""
+    try:
+        data = request.json
+        session_id = data.get('session_id')
+        
+        if not session_id or session_id not in session_data:
+            return jsonify({'success': False, 'error': 'Session not found'})
+        
+        resume_text = session_data[session_id]['resume_text']
+        
+        prompt = """Based on this resume, suggest 3-5 specific job titles that would be most suitable for this candidate. Consider their skills, experience, and background. Format as a numbered list with brief explanations for each suggestion."""
+        
+        if client:
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": prompt},
+                    {"role": "user", "content": f"Resume content:\n\n{resume_text}"}
+                ],
+                max_tokens=800,
+                temperature=0.7
+            )
+            suggestions = response.choices[0].message.content
+        else:
+            response = openai.ChatCompletion.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": prompt},
+                    {"role": "user", "content": f"Resume content:\n\n{resume_text}"}
+                ],
+                max_tokens=800,
+                temperature=0.7
+            )
+            suggestions = response.choices[0].message.content
+        
+        return jsonify({'success': True, 'suggestions': suggestions})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/cover-letter', methods=['POST'])
+def generate_cover_letter():
+    """Generate personalized cover letter"""
+    try:
+        data = request.json
+        session_id = data.get('session_id')
+        job_role = data.get('job_role', '')
+        
+        if not session_id or session_id not in session_data:
+            return jsonify({'success': False, 'error': 'Session not found'})
+        
+        resume_text = session_data[session_id]['resume_text']
+        
+        prompt = f"""Create a professional cover letter for the job role: "{job_role}". Base it on the provided resume content. The cover letter should:
+- Be personalized and specific to the role
+- Highlight relevant experience and skills
+- Be professional yet engaging
+- Include proper structure (greeting, body paragraphs, closing)
+- Be approximately 250-300 words"""
+        
+        if client:
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": prompt},
+                    {"role": "user", "content": f"Resume content:\n\n{resume_text}"}
+                ],
+                max_tokens=1000,
+                temperature=0.7
+            )
+            cover_letter = response.choices[0].message.content
+        else:
+            response = openai.ChatCompletion.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": prompt},
+                    {"role": "user", "content": f"Resume content:\n\n{resume_text}"}
+                ],
+                max_tokens=1000,
+                temperature=0.7
+            )
+            cover_letter = response.choices[0].message.content
+        
+        return jsonify({'success': True, 'cover_letter': cover_letter})
+        
+    except Exception as e:
+        return jsonify({'success': False, 'error': str(e)})
+
+@app.route('/interview-questions', methods=['POST'])
+def generate_interview_questions():
+    """Generate interview questions based on resume and job role"""
+    try:
+        data = request.json
+        session_id = data.get('session_id')
+        job_role = data.get('job_role', '')
+        
+        if not session_id or session_id not in session_data:
+            return jsonify({'success': False, 'error': 'Session not found'})
+        
+        resume_text = session_data[session_id]['resume_text']
+        
+        prompt = f"""Generate 8-12 potential interview questions for the job role: "{job_role}" based on this resume. Include:
+- 3-4 general questions about experience and background
+- 3-4 technical/skill-based questions relevant to the role
+- 2-3 behavioral questions
+- 1-2 questions about specific projects or achievements mentioned in the resume
+
+Format as a numbered list with clear, realistic interview questions."""
+        
+        if client:
+            response = client.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": prompt},
+                    {"role": "user", "content": f"Resume content:\n\n{resume_text}"}
+                ],
+                max_tokens=1200,
+                temperature=0.7
+            )
+            questions = response.choices[0].message.content
+        else:
+            response = openai.ChatCompletion.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": prompt},
+                    {"role": "user", "content": f"Resume content:\n\n{resume_text}"}
+                ],
+                max_tokens=1200,
+                temperature=0.7
+            )
+            questions = response.choices[0].message.content
+        
+        return jsonify({'success': True, 'questions': questions})
         
     except Exception as e:
         return jsonify({'success': False, 'error': str(e)})
